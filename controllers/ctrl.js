@@ -1,4 +1,5 @@
 const express = require('express')
+const User = require('../model/model')
 
 /**
  * 
@@ -6,7 +7,12 @@ const express = require('express')
  * @param {express.Response} res 
  */
 exports.inscription = (req, res) => {
-    res.send('Inscription')
+
+    // ** Recuperer les données
+    const {body} = req
+    // ** Valider les données
+    console.log(body)
+    res.json(body)
 }
 
 /**
