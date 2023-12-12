@@ -11,9 +11,12 @@ exports.inscription = (req, res) => {
 
     // ** Recuperer les données
     const {body} = req
+
     // ** Valider les données
     const {error} = userValidation(body)
     if(error) return res.status(401).json(error.details[0].message)
+
+    // ** hash mdp
     console.log(body)
     res.json(body)
 }
