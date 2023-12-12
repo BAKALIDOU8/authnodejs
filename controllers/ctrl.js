@@ -1,4 +1,5 @@
 const express = require('express')
+const bcrypt = require('bcrypt')
 const User = require('../model/model')
 const userValidation = require('../validation/validation')
 
@@ -17,8 +18,20 @@ exports.inscription = (req, res) => {
     if(error) return res.status(401).json(error.details[0].message)
 
     // ** hash mdp
-    console.log(body)
-    res.json(body)
+    bcrypt.hash(body.password, 10)
+    .then(hash => {
+        if(!hash) return res.status(500).json({msg: "server error"})
+
+        delete body.password
+        new User({...body, password : hash})
+        .save()
+        .then((user) => {
+            console.log(user)
+            res.status(201).json({msg : "User Created !"})
+        })
+        .catch((error) => res.status(500).json(error))
+    })
+    .catch((error) => res.status(500).json(error))
 }
 
 /**
