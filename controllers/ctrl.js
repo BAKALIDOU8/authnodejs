@@ -63,7 +63,7 @@ exports.connexion = (req, res) => {
                 id: user._id,
                 token: jwt.sign(
                     {id : user._id},
-                    "Secter_KEY",
+                    "SECRET_KEY",
                     {expiresIn : "12h"}
                 )
         })

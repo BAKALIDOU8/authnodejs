@@ -2,6 +2,8 @@ const express = require('express')
 
 const db = require('./db/db')
 const routes = require('./routes/routes')
+require('./middlewares/auth')
+
 const app = express()
 
 db()
