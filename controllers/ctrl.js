@@ -14,7 +14,7 @@ exports.inscription = (req, res) => {
     const {body} = req
 
     // ** Valider les données
-    const {error} = userValidation(body)
+    const {error} = userValidation(body).userValidationSignUp
     if(error) return res.status(401).json(error.details[0].message)
 
     // ** hash mdp
@@ -34,11 +34,32 @@ exports.inscription = (req, res) => {
     .catch((error) => res.status(500).json(error))
 }
 
+
 /**
  * 
  * @param {express.Request} req 
  * @param {express.Response} res 
  */
 exports.connexion = (req, res) => {
+    const {email, password} = req.body
+    //** Valider les données
+
+    const {error} = userValidation(req.body).userValidationLogin
+    if(error) return res.status(401).json(error.details[0].message)
+
+    //** trouver les users dans la db
+    User.find({email : email})
+    .then(user => {
+        if(!user) return res.status(404).json({msg : "User not found"})
+
+        // Verification du mot de passe 
+        bcrypt.compare(password, user[0].password)
+        .then(match => {
+            if(!match) return res.status(500).json({msg: "Server error"})
+        })
+        .catch(error => res.status(500).json(error))
+    })
+    .catch(error => res.status(500).json(error))
+
     res.send('Connexion')
 }
